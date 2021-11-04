@@ -1,4 +1,5 @@
 from functools import reduce
+from typing import Text
 
 
 def split(delimiters, text):
@@ -14,31 +15,66 @@ def split(delimiters, text):
     return re.split(regex_pattern, text, 0)
 
 
+def char_lower(char:str) :
+    """
+    Converts an alphabet character to lowercase
+
+    Args:
+        char (str): single character string 
+
+    Returns:
+        str: lowercase char
+    """
+    try:
+        char[0]
+    except:
+        return '' 
+    return  (
+                chr(ord(char) + 32)
+                if 64 < ord(char) < 91
+                else char
+            )
+
+
 def lower(text:str):
+    """
+    Converts text to lowercase
+
+    Args:
+        text (str): text to be converted
+
+    Returns:
+        str: lowercase text
+    """
+    try:
+        text[0]
+    except:
+        return ''
     return  str(
-                reduce( lambda c1, c2: c1+c2,
-                        map(
-                            lambda char:
-                                chr(ord(char) + 32)
-                                if 64 < ord(char) < 91
-                                else char,
-                            text
-                        )
-                )
-            )
-
-
-def length(iterable):
-    return  int(
                 reduce(
-                    lambda x, y : x + y,
-                    map(
-                        lambda _: 1,
-                        iterable
-                    )
+                    lambda c1, c2:
+                        c1 + char_lower(c2),
+                    char_lower(text[0])+text[1:]
                 )
-            )
+            )           
 
+
+def leng(iterable):
+    """
+    Finds the length of a given iterable object
+
+    Args:
+        iterable (iterable object): the iterable to be counted
+
+    Returns:
+        int: the length of the iterable,
+             0 if not an iterable or empty
+    """
+    try:
+        return [*enumerate(iterable)][-1][0]+1
+    except:
+        return 0
+    
 
 def convert_to_word_list(text:str, delimeters:list = [',',';',' ','?',"."]):
     """
@@ -60,9 +96,9 @@ def convert_to_word_list(text:str, delimeters:list = [',',';',' ','?',"."]):
                         word != '',
                     map(
                         lambda word : 
-                            (word.lower()[:-1]
+                            (lower(word)[:-1]
                             if word[-1] in delimeters 
-                            else word.lower())
+                            else lower(word))
                             if word != '' 
                             else '',
                         split(
@@ -73,7 +109,7 @@ def convert_to_word_list(text:str, delimeters:list = [',',';',' ','?',"."]):
             ]
 
 
-def words_longer_than(length:str, text:int):
+def words_longer_than(length:int, text:str):
     """
     Filters text to be a list of all the words of length.
 
@@ -87,8 +123,8 @@ def words_longer_than(length:str, text:int):
     return  [
                 *filter(
                     lambda word :
-                        len(word) >= length,
-                    convert_to_word_list(text)
+                        leng(word) >= length,
+                    convert_to_word_list(text) 
                     )
             ]
 
@@ -112,21 +148,23 @@ def words_lengths_map(text):
                     lambda key :
                         (
                             key,
-                            len(
+                            leng(
                                 [
                                 *filter(
                                     lambda word :
-                                        len(word) == key,
+                                        leng(word) == key,
                                         words
                                     )
                                 ]
                             )
                         ),
-                    map(
+                    set(
+                        map(
                         lambda word :
-                            len(word),
+                            leng(word),
                             words
-                    ) 
+                        )
+                    )
                 )
             )
     
@@ -137,12 +175,12 @@ def letters_count_map(text, alphabet = 'abcdefghijklmnopqrstuvwxyz'):
                     lambda key :
                         (
                             key,
-                            len(
+                            leng(
                                 [
                                 *filter(
                                     lambda char :
                                         char == key,
-                                        text.lower()
+                                        lower(text)
                                     )
                                 ]
                             )
@@ -167,12 +205,61 @@ def most_used_character(text:str):
                 else None
             )   
 
+
 # print(convert_to_word_list("Hello World! I'm bob, your uncle."))
 # print(words_lengths_map("Hello World! I'm bob, your uncle."))
 # print(*letters_count_map("Hello World! I'm bob, your uncle.").items(), sep = "\n")
 # print(most_used_character("Hello World! I'm bob, your uncle."), sep = "\n")
 # print(most_used_character("H"), sep = "\n")
-print(length("abced"))
-print(lower("Hello World! I'm bob, your uncle."))
+# import time
+# str = 1000000*'s'
+# start_time = time.time()
+# for _ in  range(100):
+#     # len("abced")
+#     # words_lengths_map("Hello World! I'm bob, your uncle.")
+#     leng(str)
+#     # lower("Hello World! I'm bob, your uncle. h")
+# print ("Mine took", time.time() - start_time, "to run")
+
+# start_time = time.time()
+# for _ in  range(100):
+#     len(str)
+# print ("Theirs took", time.time() - start_time, "to run")
+# print(leng("abced"))
+# print(lower("Hello World! I'm bob, your uncle. h"))
 
 
+# def leng(iterable):
+    #enumerate + error checking - not necessary - 2nd fastest
+    # try:
+    #     return [*enumerate(iterable)][-1][0]
+    # except:
+    #     return 0
+
+    # reduce function - slowest
+    # try:
+    #     iterable[0]
+    # except:
+    #     return 0
+    
+    # try:
+    #     iterable[1]
+    # except:
+    #     return 1
+
+    # return  int(
+    #             reduce(
+    #                 lambda f, _: 
+    #                     (f if isinstance(f, int) 
+    #                     else 1) + 1,
+    #                 iterable
+    #             )
+    #         )
+
+    #recursion - 3rd fastest
+#def leng(iterable, index = 0):
+    # try:
+    #     iterable[index]
+    #     return leng(iterable, index+1)
+    # except:
+    #     return index
