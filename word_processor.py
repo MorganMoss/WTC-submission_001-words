@@ -169,7 +169,22 @@ def words_lengths_map(text):
             )
     
 
-def letters_count_map(text, alphabet = 'abcdefghijklmnopqrstuvwxyz'):
+def letters_count_map(text:str, alphabet:str = 'abcdefghijklmnopqrstuvwxyz'):
+    """
+    Makes a dictionary where the keys are the letters of alphabet
+    and the items are the number of the respective letters there 
+    are in text.
+
+    Args:
+        text (str): The text to map out.
+        alphabet (str, optional): alphabet to map to. 
+        Defaults to 'abcdefghijklmnopqrstuvwxyz'.
+
+    Returns:
+        dict: map of the count of each character in alphabet.
+            * key: alphabet letter.
+            * item: count of that letter in text.
+    """
     return  dict(
                 map(
                     lambda key :
@@ -191,6 +206,15 @@ def letters_count_map(text, alphabet = 'abcdefghijklmnopqrstuvwxyz'):
 
 
 def most_used_character(text:str):
+    """
+    Finds the mode character of the text.
+
+    Args:
+        text (str): The text to take the mode of.
+
+    Returns:
+        str: The most frequent single character in text.
+    """
     char_map =  letters_count_map(text)
     max_char =  reduce(
                     lambda char1, char2:
@@ -204,4 +228,3 @@ def most_used_character(text:str):
                 if char_map[max_char] > 0 
                 else None
             )   
-

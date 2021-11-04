@@ -83,6 +83,8 @@ class TestWordProcessor(unittest.TestCase):
         text = "Fine! I'll go..."
         self.assertEqual(leng(text), len(text))
         self.assertEqual(leng(''), len(''))
+        nums = [5,2,3,1]
+        self.assertEqual(leng(nums), len(nums))
 
     
     def test_lower(self):
@@ -90,3 +92,5 @@ class TestWordProcessor(unittest.TestCase):
         self.assertEqual(lower(text),text.lower())
         self.assertEqual(lower(''),''.lower())
 
+if __name__ == '__main__':
+    unittest.main()
